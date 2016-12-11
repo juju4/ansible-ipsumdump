@@ -1,0 +1,39 @@
+---
+
+- name: Debian | Install ipsumdump dependencies
+  apt: name={{item}} state=present update_cache=yes
+  with_items:
+    - make
+    - gcc
+    - g++
+    - ca-certificates
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: Redhat | Install ipsumdump dependencies
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - make
+    - gcc
+    - gcc-c++
+  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+  register: ipsumdumparchive
+## FIXME! FAILED! => {"changed": false, "failed": true, "msg": "Failed to validate the SSL certificate for www.ipsumdump.org:443. Make sure your managed systems have a valid CA certificate installed. You can use validate_certs=False if you do not need to confirm the servers identity but this is unsafe and not recommended. Paths checked for this platform: /etc/ssl/certs, /etc/pki/ca-trust/extracted/pem, /etc/pki/tls/certs, /usr/share/ca-certificates/cacert.org, /etc/ansible"}
+- name: Download ipsumdump archive
+  get_url: url=http://www.read.seas.harvard.edu/%7Ekohler/ipsumdump/ipsumdump-{{ ipsumdump_v }}.tar.gz validate_certs=False
+    dest=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+    mode=0400
+    checksum=sha256:{{ ipsumdump_archive_sha256 }}
+  when: not ipsumdumparchive.stat.exists
+- stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
+  register: ipsumdumpbin
+- name: compile and install ipsumdump
+  command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
+  with_items:
+## https://github.com/ansible/ansible/issues/8260
+    - { command: 'tar xzf /root/ipsumdump-{{ ipsumdump_v }}.tar.gz', chdir: '/root', c: '/root/ipsumdump-{{ ipsumdump_v }}/configure' }
+    - { command: './configure --prefix={{ ipsumdump_prefix }}', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/Makefile' }
+    - { command: 'make', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/src/ipsumdump' }
+    - { command: 'make install', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: "{{ ipsumdump_prefix }}/bin/ipsumdump" }
+  when: not ipsumdumpbin.stat.exists
+
