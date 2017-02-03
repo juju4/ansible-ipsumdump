@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/juju4/ansible-ipsumdump.svg?branch=master)](https://travis-ci.org/juju4/ansible-ipsumdump)
+[![Build Status - Master](https://travis-ci.org/juju4/ansible-ipsumdump.svg?branch=master)](https://travis-ci.org/juju4/ansible-ipsumdump)
+[![Build Status - Devel](https://travis-ci.org/juju4/ansible-ipsumdump.svg?branch=devel)](https://travis-ci.org/juju4/ansible-ipsumdump/branches)
 # ipsumdump ansible role
 
 Ansible role to setup ipsumdump.
