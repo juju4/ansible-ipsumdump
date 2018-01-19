@@ -20,10 +20,12 @@
   register: ipsumdumparchive
 ## FIXME! FAILED! => {"changed": false, "failed": true, "msg": "Failed to validate the SSL certificate for www.ipsumdump.org:443. Make sure your managed systems have a valid CA certificate installed. You can use validate_certs=False if you do not need to confirm the servers identity but this is unsafe and not recommended. Paths checked for this platform: /etc/ssl/certs, /etc/pki/ca-trust/extracted/pem, /etc/pki/tls/certs, /usr/share/ca-certificates/cacert.org, /etc/ansible"}
 - name: Download ipsumdump archive
-  get_url: url=http://www.read.seas.harvard.edu/%7Ekohler/ipsumdump/ipsumdump-{{ ipsumdump_v }}.tar.gz validate_certs=False
-    dest=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
-    mode=0400
-    checksum=sha256:{{ ipsumdump_archive_sha256 }}
+  get_url:
+    url: "{{ ipsumdump_url }}"
+    validate_certs: False
+    dest: /root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+    mode: '0400'
+    checksum: "sha256:{{ ipsumdump_archive_sha256 }}"
   when: not ipsumdumparchive.stat.exists
 - stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
   register: ipsumdumpbin
