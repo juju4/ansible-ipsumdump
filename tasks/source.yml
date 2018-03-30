@@ -29,11 +29,15 @@
   when: not ipsumdumparchive.stat.exists
 - stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
   register: ipsumdumpbin
+- name: unarchive ipsumdump
+  unarchive:
+    remote_src: yes
+    src: /root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+    dest: /root
 - name: compile and install ipsumdump
   command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
   with_items:
 ## https://github.com/ansible/ansible/issues/8260
-    - { command: 'tar xzf /root/ipsumdump-{{ ipsumdump_v }}.tar.gz', chdir: '/root', c: '/root/ipsumdump-{{ ipsumdump_v }}/configure' }
     - { command: './configure --prefix={{ ipsumdump_prefix }}', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/Makefile' }
     - { command: 'make', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/src/ipsumdump' }
     - { command: 'make install', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: "{{ ipsumdump_prefix }}/bin/ipsumdump" }
