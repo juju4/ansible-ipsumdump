@@ -20,7 +20,8 @@
   register: pkg_result
   until: pkg_result is success
 
-- stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+- name: Check if ipsumdump archive is present
+  stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
   register: ipsumdumparchive
 - name: Download ipsumdump archive
   get_url:
@@ -30,7 +31,8 @@
     mode: '0400'
     checksum: "sha256:{{ ipsumdump_archive_sha256 }}"
   when: not ipsumdumparchive.stat.exists
-- stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
+- name: Check if ipsumdump binary is present
+  stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
   register: ipsumdumpbin
 - name: unarchive ipsumdump
   unarchive:

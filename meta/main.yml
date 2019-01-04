@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: juju4
-  description: ipsumdump summarizes TCP/IP dump files into a self-describing ASCII format easily readable by humans and programs
+  description: ipsumdump summarizes TCP/IP dump files into a self-describing ASCII format
   license: BSD
   min_ansible_version: 2.0
   platforms:
