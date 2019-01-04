@@ -1,24 +1,27 @@
 ---
 
 - name: Debian | Install ipsumdump dependencies
-  apt: name={{item}} state=present update_cache=yes
+  apt: name={{ item }} state=present update_cache=yes
   with_items:
     - make
     - gcc
     - g++
     - ca-certificates
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  register: pkg_result
+  until: pkg_result is success
 - name: Redhat | Install ipsumdump dependencies
-  yum: name={{item}} state=present update_cache=yes
+  yum: name={{ item }} state=present update_cache=yes
   with_items:
     - make
     - gcc
     - gcc-c++
-  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_os_family == "RedHat"
+  register: pkg_result
+  until: pkg_result is success
 
 - stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
   register: ipsumdumparchive
-## FIXME! FAILED! => {"changed": false, "failed": true, "msg": "Failed to validate the SSL certificate for www.ipsumdump.org:443. Make sure your managed systems have a valid CA certificate installed. You can use validate_certs=False if you do not need to confirm the servers identity but this is unsafe and not recommended. Paths checked for this platform: /etc/ssl/certs, /etc/pki/ca-trust/extracted/pem, /etc/pki/tls/certs, /usr/share/ca-certificates/cacert.org, /etc/ansible"}
 - name: Download ipsumdump archive
   get_url:
     url: "{{ ipsumdump_url }}"
@@ -38,8 +41,16 @@
   command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
   with_items:
 ## https://github.com/ansible/ansible/issues/8260
-    - { command: './configure --prefix={{ ipsumdump_prefix }}', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/Makefile' }
-    - { command: 'make', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: '/root/ipsumdump-{{ ipsumdump_v }}/src/ipsumdump' }
-    - { command: 'make install', chdir: '/root/ipsumdump-{{ ipsumdump_v }}', c: "{{ ipsumdump_prefix }}/bin/ipsumdump" }
+    - { command: './configure --prefix={{ ipsumdump_prefix }}',
+        chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
+        c: '/root/ipsumdump-{{ ipsumdump_v }}/Makefile'
+      }
+    - { command: 'make',
+        chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
+        c: '/root/ipsumdump-{{ ipsumdump_v }}/src/ipsumdump'
+      }
+    - { command: 'make install',
+        chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
+        c: "{{ ipsumdump_prefix }}/bin/ipsumdump"
+      }
   when: not ipsumdumpbin.stat.exists
-
