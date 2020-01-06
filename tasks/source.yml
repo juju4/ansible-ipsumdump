@@ -1,21 +1,25 @@
 ---
 
 - name: Debian | Install ipsumdump dependencies
-  apt: name={{ item }} state=present update_cache=yes
-  with_items:
+  apt:
+    name:
     - make
     - gcc
     - g++
     - ca-certificates
+    state: present
+    update_cache: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   register: pkg_result
   until: pkg_result is success
 - name: Redhat | Install ipsumdump dependencies
-  yum: name={{ item }} state=present update_cache=yes
-  with_items:
+  yum:
+    name:
     - make
     - gcc
     - gcc-c++
+    state: present
+    update_cache: yes
   when: ansible_os_family == "RedHat"
   register: pkg_result
   until: pkg_result is success
