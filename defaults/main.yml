@@ -1,7 +1,7 @@
 ---
 
 ipsumdump_v: 1.86
-#ipsumdump_url: "http://www.read.seas.harvard.edu/~kohler/ipsumdump/ipsumdump-1.85.tar.gz"
+# ipsumdump_url: "http://www.read.seas.harvard.edu/~kohler/ipsumdump/ipsumdump-1.85.tar.gz"
 ipsumdump_url: "https://github.com/kohler/ipsumdump/archive/v{{ ipsumdump_v }}.tar.gz"
 ipsumdump_archive_sha256: '2ce965833822e8c7501fda0b9923a4fc6f22efa6492557e94d7182b8ff333e10'
 ipsumdump_prefix: /usr/local

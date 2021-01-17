@@ -3,10 +3,10 @@
 - name: Debian | Install ipsumdump dependencies
   apt:
     name:
-    - make
-    - gcc
-    - g++
-    - ca-certificates
+      - make
+      - gcc
+      - g++
+      - ca-certificates
     state: present
     update_cache: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
@@ -15,9 +15,9 @@
 - name: Redhat | Install ipsumdump dependencies
   yum:
     name:
-    - make
-    - gcc
-    - gcc-c++
+      - make
+      - gcc
+      - gcc-c++
     state: present
     update_cache: yes
   when: ansible_os_family == "RedHat"
@@ -42,21 +42,22 @@
   unarchive:
     remote_src: yes
     src: /root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+    mode: '0755'
     dest: /root
 - name: compile and install ipsumdump
   command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
   with_items:
-## https://github.com/ansible/ansible/issues/8260
+    ## https://github.com/ansible/ansible/issues/8260
     - { command: './configure --prefix={{ ipsumdump_prefix }}',
         chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
         c: '/root/ipsumdump-{{ ipsumdump_v }}/Makefile'
-      }
+    }
     - { command: 'make',
         chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
         c: '/root/ipsumdump-{{ ipsumdump_v }}/src/ipsumdump'
-      }
+    }
     - { command: 'make install',
         chdir: '/root/ipsumdump-{{ ipsumdump_v }}',
         c: "{{ ipsumdump_prefix }}/bin/ipsumdump"
-      }
+    }
   when: not ipsumdumpbin.stat.exists
