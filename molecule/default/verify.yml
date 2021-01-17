@@ -9,7 +9,7 @@
       register: bin
     - name: Validate binary present
       assert:
-        that: bin.stat.exists and bin.stat.size != 0 and bin.stats.mode == '0755'
+        that: bin.stat.exists and bin.stat.size != 0 and bin.stat.mode == '0755'
 
     - name: Ensure binary is working
       command: /usr/local/bin/ipsumdump -h
