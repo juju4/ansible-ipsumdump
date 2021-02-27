@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: ipsumdump
   author: juju4
   description: ipsumdump summarizes TCP/IP dump files into a self-describing ASCII format
   license: BSD
