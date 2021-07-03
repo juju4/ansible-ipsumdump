@@ -29,6 +29,7 @@
 - name: Check if ipsumdump archive is present
   stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
   register: ipsumdumparchive
+
 - name: Download ipsumdump archive
   get_url:
     url: "{{ ipsumdump_url }}"
@@ -37,15 +38,19 @@
     mode: '0400'
     checksum: "sha256:{{ ipsumdump_archive_sha256 }}"
   when: not ipsumdumparchive.stat.exists
+
 - name: Check if ipsumdump binary is present
   stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
   register: ipsumdumpbin
+
 - name: unarchive ipsumdump
   unarchive:
     remote_src: yes
     src: /root/ipsumdump-{{ ipsumdump_v }}.tar.gz
     mode: '0755'
     dest: /root
+  when: not ipsumdumpbin.stat.exists
+
 - name: compile and install ipsumdump
   command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
   with_items:
