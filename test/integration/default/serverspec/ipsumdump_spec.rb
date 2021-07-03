@@ -22,4 +22,3 @@ describe command('/usr/local/bin/ipsumdump -h') do
   its(:stderr) { should_not match /No such file or directory/ }
   its(:exit_status) { should eq 0 }
 end
-
