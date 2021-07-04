@@ -8,6 +8,7 @@
       - g++
       - ca-certificates
       - perl
+      - patch
     state: present
     update_cache: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
@@ -50,6 +51,12 @@
     mode: '0755'
     dest: /root
   when: not ipsumdumpbin.stat.exists
+
+- name: Focal | patch SIOCGSTAMP for latest kernel headers
+  patch:
+    src: patch-src-fromdevice.cc
+    basedir: "/root/ipsumdump-{{ ipsumdump_v }}"
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20)
 
 - name: compile and install ipsumdump
   command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
