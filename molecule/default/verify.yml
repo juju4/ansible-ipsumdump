@@ -4,18 +4,18 @@
   hosts: ipsumdump
   tasks:
     - name: Ensure /usr/local/bin/ipsumdump is present
-      stat:
+      ansible.builtin.stat:
         path: /usr/local/bin/ipsumdump
       register: bin
     - name: Validate binary present
-      assert:
+      ansible.builtin.assert:
         that: bin.stat.exists and bin.stat.size != 0 and bin.stat.mode == '0755'
 
     - name: Ensure binary is working
-      command: /usr/local/bin/ipsumdump -h
+      ansible.builtin.command: /usr/local/bin/ipsumdump -h
       register: exec
       changed_when: false
       ignore_errors: true
     - name: Validate exec output
-      assert:
+      ansible.builtin.assert:
         that: "'Usage: ipsumdump [DATA OPTIONS] [-i DEVNAMES | FILES] > SUMMARYFILE' in exec.stdout"
