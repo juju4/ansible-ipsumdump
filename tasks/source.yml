@@ -44,7 +44,7 @@
   ansible.builtin.stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
   register: ipsumdumpbin
 
-- name: unarchive ipsumdump
+- name: Unarchive ipsumdump
   ansible.builtin.unarchive:
     remote_src: yes
     src: /root/ipsumdump-{{ ipsumdump_v }}.tar.gz
@@ -56,9 +56,9 @@
   ansible.posix.patch:
     src: patch-src-fromdevice.cc
     basedir: "/root/ipsumdump-{{ ipsumdump_v }}"
-  when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20)
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20)
 
-- name: compile and install ipsumdump
+- name: Compile and install ipsumdump
   ansible.builtin.command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
   with_items:
     ## https://github.com/ansible/ansible/issues/8260
