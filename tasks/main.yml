@@ -10,4 +10,5 @@
 #   ansible.builtin.include_vars: "Alpine.yml"
 #   when: ansible_os_family == "Alpine"
 
-- import_tasks: source.yml
+- name: Import source
+  ansible.builtin.import_tasks: source.yml

@@ -28,7 +28,8 @@
   until: pkg_result is success
 
 - name: Check if ipsumdump archive is present
-  ansible.builtin.stat: path=/root/ipsumdump-{{ ipsumdump_v }}.tar.gz
+  ansible.builtin.stat:
+    path: "/root/ipsumdump-{{ ipsumdump_v }}.tar.gz"
   register: ipsumdumparchive
 
 - name: Download ipsumdump archive
@@ -41,7 +42,8 @@
   when: not ipsumdumparchive.stat.exists
 
 - name: Check if ipsumdump binary is present
-  ansible.builtin.stat: path={{ ipsumdump_prefix }}/bin/ipsumdump
+  ansible.builtin.stat:
+    path: "{{ ipsumdump_prefix }}/bin/ipsumdump"
   register: ipsumdumpbin
 
 - name: Unarchive ipsumdump
@@ -59,7 +61,10 @@
   when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20)
 
 - name: Compile and install ipsumdump
-  ansible.builtin.command: "{{ item.command }} chdir={{ item.chdir }} creates={{ item.c }}"
+  ansible.builtin.command: "{{ item.command }}"
+  args:
+    chdir: "{{ item.chdir }}"
+    creates: "{{ item.c }}"
   with_items:
     ## https://github.com/ansible/ansible/issues/8260
     - { command: './configure --prefix={{ ipsumdump_prefix }}',
