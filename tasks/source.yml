@@ -58,7 +58,9 @@
   ansible.posix.patch:
     src: patch-src-fromdevice.cc
     basedir: "/root/ipsumdump-{{ ipsumdump_v }}"
-  when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20)
+  when:
+    - (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20)
+    - not ipsumdumpbin.stat.exists
 
 - name: Compile and install ipsumdump
   ansible.builtin.command: "{{ item.command }}"
