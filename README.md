@@ -1,7 +1,7 @@
-[![Actions Status - Master](https://github.com/juju4/ansible-ipsumdump/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-ipsumdump/actions?query=branch%3Amaster)
-[![Actions Status - Devel](https://github.com/juju4/ansible-ipsumdump/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-ipsumdump/actions?query=branch%3Adevel)
-
 # ipsumdump ansible role
+
+[![Actions Status - Main](https://github.com/juju4/ansible-ipsumdump/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-ipsumdump/actions?query=branch%3Amain)
+[![Actions Status - Devel](https://github.com/juju4/ansible-ipsumdump/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-ipsumdump/actions?query=branch%3Adevel)
 
 Ansible role to setup ipsumdump.
 The ipsumdump program summarizes TCP/IP dump files into a self-describing ASCII format easily readable by humans and programs
